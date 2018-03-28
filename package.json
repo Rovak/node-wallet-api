@@ -4,9 +4,10 @@
   "description": "Tronprotocol Wallet API wrapper",
   "main": "index.js",
   "homepage": "https://tron.network/",
-
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "protoc:install": "cd protocol && ./install-protobuf.sh",
+    "protoc:generate": "./protocol/protobuf-3.5.1/src/.libs/protoc --proto_path=protocol/protobuf-3.5.1/src --proto_path=protocol --js_out=import_style=commonjs,binary:src/protocol protocol/core/*.proto protocol/api/*.proto"
   },
   "repository": {
     "type": "git",
@@ -16,5 +17,8 @@
     "tron"
   ],
   "author": "Tron",
-  "license": "GPL-3.0"
+  "license": "GPL-3.0",
+  "dependencies": {
+    "grpc": "^1.10.0"
+  }
 }
