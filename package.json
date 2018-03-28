@@ -1,0 +1,16 @@
+{
+  "name": "tron-wallet-api",
+  "version": "0.0.1",
+  "description": "Tronprotocol Wallet API wrapper",
+  "main": "index.js",
+  "homepage": "https://tron.network/",
+
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "tron"
+  ],
+  "author": "Tron",
+  "license": "GPL-3.0"
+}
