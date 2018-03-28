@@ -1,0 +1,6 @@
+[submodule "src/src/protocol"]
+	path = src/src/protocol
+	url = https://github.com/tronprotocol/protocol
+[submodule "src/protocol"]
+	path = src/protocol
+	url = https://github.com/tronprotocol/protocol
