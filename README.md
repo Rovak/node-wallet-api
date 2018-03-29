@@ -16,6 +16,21 @@
 
 # How to use
 
+## Requirements
+
+* Node v9.8.0
+
+## Running tests
+
+Running the tests requires an active `wallet-cli` application. 
+Check out to the [readme](https://github.com/tronprotocol/wallet-cli) to get it up and running.
+
+When there is a running `wallet-cli` application use `npm` to run the tests
+
+```
+npm test
+```
+
 # Community
 
 * [Slack](https://join.slack.com/t/tronfoundation/shared_invite/enQtMzAzNzg4NTI4NDM3LTAyZGQzMzEzMjNkNDU0ZjNkNTA4OTYyNTA5YWZmYjE3MTEyOWZhNzljNzQwODM3NDQ0OWRiMTIyMDhlYzgyOGQ)
