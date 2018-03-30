@@ -1,12 +1,14 @@
-const {WalletClient} = require("../protocol/api/api_grpc_pb");
-const {EmptyMessage, NumberMessage} = require("../protocol/api/api_pb");
-const caller = require('grpc-caller');
 
-class Client {
+const {EmptyMessage, NumberMessage} = require("../protocol/api/api_pb");
+
+class GrpcClient {
 
   constructor(options) {
     this.hostname = options.hostname;
     this.port = options.port;
+
+    const {WalletClient} = require("../protocol/api/api_grpc_pb");
+    const caller = require('grpc-caller');
 
     /**
      * @type {WalletClient}
@@ -59,4 +61,4 @@ class Client {
 
 }
 
-module.exports = Client;
+module.exports = GrpcClient;

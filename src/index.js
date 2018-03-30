@@ -1,5 +1,7 @@
-const Client = require("./client");
+const GrpcClient = require("./client/grpc");
+const HttpClient = require("./client/http");
 
 module.exports = {
-  Client
+  GrpcClient,
+  HttpClient,
 };

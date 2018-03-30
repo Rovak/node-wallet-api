@@ -1,11 +1,13 @@
 const {bytesToString} = require("../src/utils/bytes");
-const {Client} = require("../src");
+const {GrpcClient} = require("../src");
 const assert = require("assert");
 
 
 describe('client', () => {
 
-  let client = new Client({
+  return;
+
+  let client = new GrpcClient({
     hostname: "localhost",
     port: 50051,
   });

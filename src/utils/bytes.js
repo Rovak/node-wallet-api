@@ -1,3 +1,5 @@
+const {Base64} = require("./base64");
+
 /**
  * Converts a byte array to string
  *
@@ -41,4 +43,8 @@ exports.hextoString = function(hex) {
     out += String.fromCharCode(tmp)
   }
   return out;
+};
+
+exports.base64DecodeFromString = function(string64) {
+  return new Base64().decodeToByteArray(string64);
 };
