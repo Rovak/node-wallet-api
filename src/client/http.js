@@ -53,7 +53,7 @@ class HttpClient {
     return {
       size: recentBlock.length,
       number: blockData.getBlockHeader().getRawData().getNumber(),
-      // witnessAddress: bytesToString(blockData.getBlockHeader().getRawData().getWitnessAddress()),
+      witnessAddress: byteArray2hexStr(blockData.getBlockHeader().getRawData().getWitnessAddress()),
       time: blockData.getBlockHeader().getRawData().getTimestamp(),
       transactionsCount: blockData.getTransactionsList().length,
       contraxtType: Transaction.Contract.ContractType,
