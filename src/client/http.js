@@ -46,6 +46,7 @@ class HttpClient {
     let recentBlock = base64DecodeFromString(data);
 
     return {
+      size: recentBlock.length,
       data: Block.deserializeBinary(recentBlock),
       number: blockData.getBlockHeader().getRawData().getNumber(),
       // witnessAddress: bytesToString(blockData.getBlockHeader().getRawData().getWitnessAddress()),
