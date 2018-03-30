@@ -27,8 +27,26 @@ Check out to the [readme](https://github.com/tronprotocol/wallet-cli) to get it 
 
 When there is a running `wallet-cli` application use `npm` to run the tests
 
-```
+```bash
 > npm test
+```
+
+## Usage
+
+Install the package
+
+```bash
+> npm install @tronprotocol/wallet-api
+```
+
+Use the HTTP Client
+
+```javascript
+import {HttpClient} from "@tronprotocol/wallet-api";
+
+const Client = new HttpClient();
+
+let latestBlock = await Client.getLatestBlock();
 ```
 
 # Community
