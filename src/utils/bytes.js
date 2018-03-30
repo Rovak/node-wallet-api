@@ -48,8 +48,8 @@ function hextoString(hex) {
   let arr = hex.split("");
   let out = "";
   for (let i = 0; i < arr.length / 2; i++) {
-    let tmp = "0x" + arr[i * 2] + arr[i * 2 + 1]
-    out += String.fromCharCode(tmp)
+    let tmp = "0x" + arr[i * 2] + arr[i * 2 + 1];
+    out += String.fromCharCode(tmp);
   }
   return out;
 }
@@ -61,10 +61,9 @@ function base64DecodeFromString(string64) {
 
 function byteArray2hexStr(byteArray) {
   let str = "";
-  for (let i = 0; i < (byteArray.length - 1); i++) {
+  for (let i = 0; i < (byteArray.length); i++) {
     str += byte2hexStr(byteArray[i]);
   }
-  str += byte2hexStr(byteArray[i]);
   return str;
 }
 

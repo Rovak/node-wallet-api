@@ -1,8 +1,10 @@
 const xhr = require("axios");
+const byteArray2hexStr = require("../utils/bytes").byteArray2hexStr;
 const deserializeTransaction = require("../protocol/serializer").deserializeTransaction;
 const bytesToString = require("../utils/bytes").bytesToString;
 const {base64DecodeFromString} = require("../utils/bytes");
 const {Block, Transaction} = require("../protocol/core/Tron_pb");
+const {AccountList} = require("../protocol/api/api_pb");
 const {TransferContract} = require("../protocol/core/Contract_pb");
 
 class HttpClient {
@@ -21,7 +23,7 @@ class HttpClient {
   }
 
   /**
-   * Retrieve all connected witnesses
+   * Retrieve latest block
    *
    * @returns {Promise<*>}
    */
@@ -35,8 +37,9 @@ class HttpClient {
       witnessId: block.getBlockHeader().getRawData().getWitnessId(),
     };
   }
+
   /**
-   * Retrieve all connected witnesses
+   * Retrieve block by number
    *
    * @returns {Promise<*>}
    */
@@ -56,6 +59,31 @@ class HttpClient {
       contraxtType: Transaction.Contract.ContractType,
       transactions: blockData.getTransactionsList().map(deserializeTransaction),
     };
+  }
+
+  async getAccountList() {
+
+    let {data} = await xhr.get(`${this.url}/accountList`);
+
+    let bytesAccountList = base64DecodeFromString(data);
+    let account = AccountList.deserializeBinary(bytesAccountList);
+    let accountList = account.getAccountsList();
+
+    return accountList.map(account => {
+      let name = bytesToString(account.getAccountName());
+      let address = byteArray2hexStr(account.getAddress());
+      let balance = account.getBalance();
+      let balanceNum = 0;
+      if (balance !== 0) {
+        balanceNum = (balance / 1000000).toFixed(6);
+      }
+      return {
+        name,
+        address,
+        balance,
+        balanceNum,
+      };
+    });
   }
 
 }
