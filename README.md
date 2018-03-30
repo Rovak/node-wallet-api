@@ -28,7 +28,7 @@ Check out to the [readme](https://github.com/tronprotocol/wallet-cli) to get it 
 When there is a running `wallet-cli` application use `npm` to run the tests
 
 ```
-npm test
+> npm test
 ```
 
 # Community
