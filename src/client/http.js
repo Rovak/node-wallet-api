@@ -1,7 +1,9 @@
 const xhr = require("axios");
+const deserializeTransaction = require("../protocol/serializer").deserializeTransaction;
 const bytesToString = require("../utils/bytes").bytesToString;
 const {base64DecodeFromString} = require("../utils/bytes");
 const {Block, Transaction} = require("../protocol/core/Tron_pb");
+const {TransferContract} = require("../protocol/core/Contract_pb");
 
 class HttpClient {
 
@@ -47,12 +49,12 @@ class HttpClient {
 
     return {
       size: recentBlock.length,
-      data: Block.deserializeBinary(recentBlock),
       number: blockData.getBlockHeader().getRawData().getNumber(),
       // witnessAddress: bytesToString(blockData.getBlockHeader().getRawData().getWitnessAddress()),
       time: blockData.getBlockHeader().getRawData().getTimestamp(),
       transactionsCount: blockData.getTransactionsList().length,
       contraxtType: Transaction.Contract.ContractType,
+      transactions: blockData.getTransactionsList().map(deserializeTransaction),
     };
   }
 

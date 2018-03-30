@@ -1,12 +1,21 @@
 const {Base64} = require("./base64");
 
+/* Convert a byte to string */
+function byte2hexStr(byte) {
+  var hexByteMap = "0123456789ABCDEF";
+  var str = "";
+  str += hexByteMap.charAt(byte >> 4);
+  str += hexByteMap.charAt(byte & 0x0f);
+  return str;
+}
+
 /**
  * Converts a byte array to string
  *
  * @param {Uint8Array} arr byte array
  * @returns {string}
  */
-exports.bytesToString = function(arr) {
+function bytesToString(arr) {
   if (typeof arr === 'string') {
     return arr;
   }
@@ -35,7 +44,7 @@ exports.bytesToString = function(arr) {
  * @param {string} hex
  * @returns {string}
  */
-exports.hextoString = function(hex) {
+function hextoString(hex) {
   let arr = hex.split("");
   let out = "";
   for (let i = 0; i < arr.length / 2; i++) {
@@ -43,8 +52,27 @@ exports.hextoString = function(hex) {
     out += String.fromCharCode(tmp)
   }
   return out;
-};
+}
 
-exports.base64DecodeFromString = function(string64) {
+function base64DecodeFromString(string64) {
   return new Base64().decodeToByteArray(string64);
+}
+
+
+function byteArray2hexStr(byteArray) {
+  let str = "";
+  for (let i = 0; i < (byteArray.length - 1); i++) {
+    str += byte2hexStr(byteArray[i]);
+  }
+  str += byte2hexStr(byteArray[i]);
+  return str;
+}
+
+
+module.exports = {
+  byteArray2hexStr,
+  hextoString,
+  base64DecodeFromString,
+  bytesToString,
+  byte2hexStr
 };
