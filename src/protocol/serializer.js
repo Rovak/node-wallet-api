@@ -12,7 +12,7 @@ function deserializeTransaction(tx) {
     switch (contract.getType()) {
 
       case contractType .ACCOUNTCREATECONTRACT: {
-        contractType = contractType .ACCOUNTCREATECONTRACT;
+        // contractType = contractType .ACCOUNTCREATECONTRACT;
 
         let obje = any.unpack(AccountCreateContract.deserializeBinary, "protocol.AccountCreateContract");
 
@@ -20,7 +20,7 @@ function deserializeTransaction(tx) {
       }
 
       case contractType .TRANSFERCONTRACT: {
-        let contractType = contractType .TRANSFERCONTRACT;
+        // let contractType = contractType .TRANSFERCONTRACT;
 
         let obje = any.unpack(TransferContract.deserializeBinary, "protocol.TransferContract");
 
