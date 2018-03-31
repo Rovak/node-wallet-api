@@ -4,7 +4,7 @@ const deserializeTransaction = require("../protocol/serializer").deserializeTran
 const bytesToString = require("../utils/bytes").bytesToString;
 const {base64DecodeFromString} = require("../utils/bytes");
 const {Block, Transaction} = require("../protocol/core/Tron_pb");
-const {AccountList} = require("../protocol/api/api_pb");
+const {AccountList, NumberMessage, WitnessList} = require("../protocol/api/api_pb");
 const {TransferContract} = require("../protocol/core/Contract_pb");
 
 class HttpClient {
@@ -61,6 +61,21 @@ class HttpClient {
     };
   }
 
+  /**
+   * Retrieve the total number of transactions
+   * @returns {Promise<number>}
+   */
+  async getTotalNumberOfTransactions() {
+    let {data} = await xhr.get(`${this.url}/getTotalTransaction`);
+    let totalTransaction = base64DecodeFromString(data);
+    let totalData = NumberMessage.deserializeBinary(totalTransaction);
+    return totalData.getNum();
+  }
+
+  /**
+   * Retrieve all accounts
+   * @returns {Promise<*>}
+   */
   async getAccountList() {
 
     let {data} = await xhr.get(`${this.url}/accountList`);
@@ -82,6 +97,30 @@ class HttpClient {
         address,
         balance,
         balanceNum,
+      };
+    });
+  }
+
+  /**
+   * Retrieves all witnesses
+   *
+   * @returns {Promise<*>}
+   */
+  async getWitnesses() {
+    let {data} = await xhr.get(`${this.url}/witnessList`);
+
+    let bytesWitnessList = base64DecodeFromString(data);
+    let witness = WitnessList.deserializeBinary(bytesWitnessList);
+    let witnessList = witness.getWitnessesList();
+
+    return witnessList.map(witness => {
+
+      return {
+        address: byteArray2hexStr(witness.getAddress()),
+        latestBlockNumber: witness.getLatestblocknum(),
+        producedTotal: witness.getTotalproduced(),
+        missedTotal: witness.getTotalmissed(),
+        votes: witness.getVotecount(),
       };
     });
   }
