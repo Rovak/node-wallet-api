@@ -23,6 +23,15 @@ class HttpClient {
   }
 
   /**
+   * Retrieve all active nodes
+   *
+   * @returns {Promise<*>}
+   */
+  async getNodes() {
+    let {data} = await xhr.get(`${this.url}/nodeList`);
+    return JSON.parse(data);
+  }
+  /**
    * Retrieve latest block
    *
    * @returns {Promise<*>}
