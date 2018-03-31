@@ -4,7 +4,7 @@ const deserializeTransaction = require("../protocol/serializer").deserializeTran
 const bytesToString = require("../utils/bytes").bytesToString;
 const {base64DecodeFromString} = require("../utils/bytes");
 const {Block, Transaction} = require("../protocol/core/Tron_pb");
-const {AccountList, NumberMessage, WitnessList} = require("../protocol/api/api_pb");
+const {AccountList, NumberMessage, WitnessList, AssetIssueList} = require("../protocol/api/api_pb");
 const {TransferContract} = require("../protocol/core/Contract_pb");
 
 class HttpClient {
@@ -130,6 +130,21 @@ class HttpClient {
         producedTotal: witness.getTotalproduced(),
         missedTotal: witness.getTotalmissed(),
         votes: witness.getVotecount(),
+      };
+    });
+  }
+
+  async getAssetIssueList() {
+    let {data} = await xhr.get(`${this.url}/getAssetIssueList`);
+
+    let assetIssueListObj = AssetIssueList.deserializeBinary(base64DecodeFromString(data));
+    return assetIssueListObj.getAssetissueList().map(asset => {
+      return {
+        name: bytesToString(asset.getName()),
+        ownerAddress: byteArray2hexStr(asset.getOwnerAddress()),
+        totalSupply: asset.getTotalSupply(),
+        startTime: asset.getStartTime(),
+        endTime: asset.getEndTime(),
       };
     });
   }
