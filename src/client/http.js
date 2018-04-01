@@ -62,6 +62,12 @@ class HttpClient {
 
     let recentBlock = base64DecodeFromString(data);
 
+    let transactions = [];
+
+    for (let transaction of blockData.getTransactionsList()) {
+      transactions = transactions.concat(deserializeTransaction(transaction));
+    }
+
     return {
       size: recentBlock.length,
       number: blockData.getBlockHeader().getRawData().getNumber(),
@@ -69,7 +75,7 @@ class HttpClient {
       time: blockData.getBlockHeader().getRawData().getTimestamp(),
       transactionsCount: blockData.getTransactionsList().length,
       contraxtType: Transaction.Contract.ContractType,
-      transactions: blockData.getTransactionsList().map(deserializeTransaction),
+      transactions,
     };
   }
 
@@ -220,6 +226,10 @@ class HttpClient {
         onwerUrl: url, // TODO yes this is spelled wrong :(
       }));
 
+    return await this.signTransaction(password, data);
+  }
+
+  async signTransaction(password, data) {
     let bytesDecode = base64DecodeFromString(data);
     let transaction = Transaction.deserializeBinary(bytesDecode);
     let transactionSigned = signTransaction(base64DecodeFromString(password), transaction);
@@ -231,6 +241,37 @@ class HttpClient {
     }));
 
     return transData;
+  }
+
+  /**
+   * Send tokens to another address
+   *
+   * @param password
+   * @param token
+   * @param to
+   * @param amount
+   * @returns {Promise<void>}
+   */
+  async send(password, token, to, amount) {
+
+    if (token.toUpperCase() === 'TRX') {
+      let {data} = await xhr.post(`${this.url}/sendCoinToView`, qs.stringify({
+        Address: passwordToAddress(password),
+        toAddress: to,
+        Amount: amount
+      }));
+
+      return await this.signTransaction(password, data);
+    } else {
+      let {data} = await xhr.post(`${this.url}/TransferAssetToView`, qs.stringify({
+        "assetName": token,
+        "Address": passwordToAddress(password),
+        "toAddress": to,
+        "Amount": amount
+      }));
+
+      return await this.signTransaction(password, data);
+    }
   }
 }
 

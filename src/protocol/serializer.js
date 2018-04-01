@@ -6,18 +6,24 @@ function deserializeTransaction(tx) {
   let contractType = Transaction.Contract.ContractType;
 
   let contractList = tx.getRawData().getContractList();
+
+  let transactions = [];
+
   for (let contract of contractList) {
     let any = contract.getParameter();
 
+    console.log(contract.getType());
+
     switch (contract.getType()) {
 
-      case contractType .ACCOUNTCREATECONTRACT: {
+      case contractType.ACCOUNTCREATECONTRACT: {
         // contractType = contractType .ACCOUNTCREATECONTRACT;
 
         let obje = any.unpack(AccountCreateContract.deserializeBinary, "protocol.AccountCreateContract");
 
-        return {};
+        transactions.push({});
       }
+        break;
 
       case contractType .TRANSFERCONTRACT: {
         // let contractType = contractType .TRANSFERCONTRACT;
@@ -35,14 +41,18 @@ function deserializeTransaction(tx) {
 
         let amount = obje.getAmount() / 1000000;
 
-        return {
+        transactions.push({
           from: ownerHex,
           to: toHex,
           amount,
-        };
+        });
       }
+      break;
     }
+
   }
+
+  return transactions;
 }
 
 module.exports = {
