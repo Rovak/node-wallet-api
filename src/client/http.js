@@ -3,7 +3,7 @@ const byteArray2hexStr = require("../utils/bytes").byteArray2hexStr;
 const deserializeTransaction = require("../protocol/serializer").deserializeTransaction;
 const bytesToString = require("../utils/bytes").bytesToString;
 const {base64DecodeFromString} = require("../utils/bytes");
-const {Block, Transaction} = require("../protocol/core/Tron_pb");
+const {Block, Transaction, Account} = require("../protocol/core/Tron_pb");
 const {AccountList, NumberMessage, WitnessList, AssetIssueList} = require("../protocol/api/api_pb");
 const {TransferContract} = require("../protocol/core/Contract_pb");
 
@@ -134,6 +134,11 @@ class HttpClient {
     });
   }
 
+  /**
+   * Retrieve all tokens
+   *
+   * @returns {Promise<*>}
+   */
   async getAssetIssueList() {
     let {data} = await xhr.get(`${this.url}/getAssetIssueList`);
 
@@ -147,6 +152,38 @@ class HttpClient {
         endTime: asset.getEndTime(),
       };
     });
+  }
+
+  /**
+   * Retrieves the balance for the account which belongs to the given address
+   *
+   * @param address
+   * @returns {Promise<*>}
+   */
+  async getAccountBalances(address) {
+    let {data} = await xhr.post(`${this.url}/queryAccount`, {
+      address,
+    });
+
+    let bytesAccountInfo = base64DecodeFromString(data);
+    let accountInfo = Account.deserializeBinary(bytesAccountInfo);
+    let Map = accountInfo.getAssetMap().toArray();
+    let Balance = accountInfo.getBalance();
+    let BalanceNum = (Balance/1000000).toFixed(6);
+
+    let balances = [{
+      name: 'TRX',
+      balance: BalanceNum
+    }];
+
+    for (let key of Object.keys(Map)) {
+      balances.push({
+        name: Map[key][0],
+        balance: Map[key][1],
+      })
+    }
+
+    return balances;
   }
 
 }
