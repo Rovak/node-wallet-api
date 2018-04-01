@@ -1,8 +1,10 @@
-/* eslint-disable */
-import {base64DecodeFromString, hexStr2byteArray} from "./code";
+const base64EncodeToString = require("../lib/code").base64EncodeToString;
+const byteArray2hexStr = require("./bytes").byteArray2hexStr;
+const {base64DecodeFromString, hexStr2byteArray} = require("../lib/code");
 const EC = require('elliptic').ec;
-const CryptoJS = require("crypto-js");
-import { sha3_256 } from 'js-sha3';
+const { sha3_256 } = require('js-sha3');
+const jsSHA = require("../lib/sha256");
+const byte2hexStr = require("./bytes").byte2hexStr;
 
 /**
  * Sign A Transaction by priKey.
@@ -24,20 +26,17 @@ function signTransaction(priKeyBytes, transaction) {
   return transaction;
 }
 
-exports.signTransaction = signTransaction
 
 //return bytes of rowdata, use to sign.
 function getRowBytesFromTransactionBase64(base64Data) {
   let bytesDecode = base64DecodeFromString(base64Data);
   let transaction = proto.protocol.Transaction.deserializeBinary(bytesDecode);
-  //toDO: assert ret is SUCESS
   let raw = transaction.getRawData();
-  let rawBytes = raw.serializeBinary();
-  return rawBytes;
+  return raw.serializeBinary();
 }
 
 //gen Ecc priKey for bytes
-export function genPriKey() {
+function genPriKey() {
   let ec = new EC('secp256k1');
   let key = ec.genKeyPair();
   let priKey = key.getPrivate();
@@ -61,7 +60,7 @@ function computeAddress(pubBytes) {
 }
 
 //return address by bytes, priKeyBytes is byte[]
-export function getAddressFromPriKey(priKeyBytes) {
+function getAddressFromPriKey(priKeyBytes) {
   let pubBytes = getPubKeyFromPriKey(priKeyBytes);
   let addressBytes = computeAddress(pubBytes);
   return addressBytes;
@@ -135,3 +134,15 @@ function SHA256(msgBytes) {
   let hashBytes = hexStr2byteArray(hashHex);
   return hashBytes;
 }
+
+function passwordToAddress(password) {
+  let com_priKeyBytes = base64DecodeFromString(password);
+  let com_addressBytes = getAddressFromPriKey(com_priKeyBytes);
+  return byteArray2hexStr(com_addressBytes);
+}
+
+
+module.exports = {
+  signTransaction,
+  passwordToAddress,
+};

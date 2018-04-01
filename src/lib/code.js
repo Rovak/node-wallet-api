@@ -200,7 +200,7 @@ function isHexChar(c) {
 /* Convert HEX string to byte array */
 
 //16进制的ASCII字符串转为byteArray格式。
-export function hexStr2byteArray(str) {
+function hexStr2byteArray(str) {
   var byteArray = Array();
   var d = 0;
   var j = 0;
@@ -221,8 +221,9 @@ export function hexStr2byteArray(str) {
   return byteArray;
 }
 
+
 /* Convert a byte to string */
-export function byte2hexStr(byte) {
+function byte2hexStr(byte) {
   var hexByteMap = "0123456789ABCDEF";
   var str = "";
   str += hexByteMap.charAt(byte >> 4);
@@ -233,7 +234,7 @@ export function byte2hexStr(byte) {
 /* Convert byte arry to HEX string */
 
 //byteArray格式数据转为16进制的ASCII字符串。
-export function byteArray2hexStr(byteArray) {
+function byteArray2hexStr(byteArray) {
   var str = "";
   for (var i = 0; i < (byteArray.length - 1); i++) {
     str += byte2hexStr(byteArray[i]);
@@ -243,23 +244,22 @@ export function byteArray2hexStr(byteArray) {
 }
 
 //从base64字符串中解码出原文，格式为byteArray格式
-export function base64DecodeFromString(string64) {
+function base64DecodeFromString(string64) {
   var b = new Base64();
   var decodeBytes = b.decodeToByteArray(string64);
-//  var decodeBytes = stringToBytes(decodeString);
   return decodeBytes;
 }
 
 //return baset64 String
 //将byteArray格式数据编码为base64字符串
-export function base64EncodeToString(bytes) {
+function base64EncodeToString(bytes) {
   // var string = bytesToString(bytes);
   var b = new Base64();
   var string64 = b.encodeIgnoreUtf8(bytes);
   return string64
 }
 
-export function Base64() {
+function Base64() {
 
   // private property
   let _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
@@ -506,3 +506,9 @@ function getStringType(str) {
 
   return -1;
 }
+
+module.exports = {
+  base64EncodeToString,
+  base64DecodeFromString,
+  hexStr2byteArray,
+};

@@ -1,5 +1,4 @@
 const xhr = require("axios");
-const signTransaction = require("../crypto/crypto").signTransaction;
 const byteArray2hexStr = require("../utils/bytes").byteArray2hexStr;
 const deserializeTransaction = require("../protocol/serializer").deserializeTransaction;
 const bytesToString = require("../utils/bytes").bytesToString;
@@ -8,6 +7,8 @@ const {Block, Transaction, Account} = require("../protocol/core/Tron_pb");
 const {AccountList, NumberMessage, WitnessList, AssetIssueList} = require("../protocol/api/api_pb");
 const {TransferContract} = require("../protocol/core/Contract_pb");
 const qs = require("qs");
+const passwordToAddress = require("../utils/crypto").passwordToAddress;
+const { signTransaction } = require("../utils/crypto");
 
 class HttpClient {
 
@@ -207,21 +208,21 @@ class HttpClient {
   /**
    * Apply for delegate
    *
-   * @param address account address
+   * @param password account address
    * @param url personal website url
    *
    * @returns {Promise<void>}
    */
-  async applyForDelegate(address, url) {
+  async applyForDelegate(password, url) {
     let {data} = await xhr
       .post(`${this.url}/createWitnessToView`, qs.stringify({
-        address,
-        ownerUrl: url,
+        address: passwordToAddress(password),
+        onwerUrl: url, // TODO yes this is spelled wrong :(
       }));
 
     let bytesDecode = base64DecodeFromString(data);
     let transaction = Transaction.deserializeBinary(bytesDecode);
-    let transactionSigned = signTransaction(com_priKeyBytes, transaction);
+    let transactionSigned = signTransaction(base64DecodeFromString(password), transaction);
     let transactionBytes = transactionSigned.serializeBinary();
     let transactionString = byteArray2hexStr(transactionBytes);
 

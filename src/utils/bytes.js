@@ -1,5 +1,6 @@
 const {Base64} = require("./base64");
 
+
 /* Convert a byte to string */
 function byte2hexStr(byte) {
   var hexByteMap = "0123456789ABCDEF";
