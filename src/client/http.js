@@ -167,19 +167,19 @@ class HttpClient {
 
     let bytesAccountInfo = base64DecodeFromString(data);
     let accountInfo = Account.deserializeBinary(bytesAccountInfo);
-    let Map = accountInfo.getAssetMap().toArray();
-    let Balance = accountInfo.getBalance();
-    let BalanceNum = (Balance/1000000).toFixed(6);
+    let assetMap = accountInfo.getAssetMap().toArray();
+    let trxBalance = accountInfo.getBalance();
+    let trxBalanceNum = (trxBalance / 1000000).toFixed(6);
 
     let balances = [{
       name: 'TRX',
-      balance: BalanceNum
+      balance: trxBalanceNum
     }];
 
-    for (let key of Object.keys(Map)) {
+    for (let asset of Object.keys(assetMap)) {
       balances.push({
-        name: Map[key][0],
-        balance: Map[key][1],
+        name: assetMap[asset][0],
+        balance: assetMap[asset][1],
       })
     }
 
