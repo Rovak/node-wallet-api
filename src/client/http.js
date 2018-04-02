@@ -264,14 +264,35 @@ class HttpClient {
       return await this.signTransaction(password, data);
     } else {
       let {data} = await xhr.post(`${this.url}/TransferAssetToView`, qs.stringify({
-        "assetName": token,
-        "Address": passwordToAddress(password),
-        "toAddress": to,
-        "Amount": amount
+        assetName: token,
+        Address: passwordToAddress(password),
+        toAddress: to,
+        Amount: amount,
       }));
 
       return await this.signTransaction(password, data);
     }
+  }
+
+  /**
+   * Create a new token
+   *
+   * @returns {Promise<void>}
+   */
+  async createToken(password, config) {
+      let {data} = await xhr.post(`${this.url}/createAssetIssueToView`, qs.stringify({
+        name: config.name,
+        totalSupply: config.totalSupply,
+        num: config.num,
+        trxNum: config.trxNum,
+        startTime: Date.parse(config.startTime),
+        endTime: Date.parse(config.endTime),
+        description: config.description,
+        url: config.url,
+        ownerAddress: passwordToAddress(password),
+      }));
+
+    return await this.signTransaction(password, data);
   }
 }
 
