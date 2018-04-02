@@ -47,6 +47,7 @@ class HttpClient {
     return {
       number: block.getBlockHeader().getRawData().getNumber(),
       witnessId: block.getBlockHeader().getRawData().getWitnessId(),
+      parentHash: byteArray2hexStr(block.getBlockHeader().getRawData().getParenthash()),
     };
   }
 
@@ -70,6 +71,7 @@ class HttpClient {
 
     return {
       size: recentBlock.length,
+      parentHash: byteArray2hexStr(blockData.getBlockHeader().getRawData().getParenthash()),
       number: blockData.getBlockHeader().getRawData().getNumber(),
       witnessAddress: byteArray2hexStr(blockData.getBlockHeader().getRawData().getWitnessAddress()),
       time: blockData.getBlockHeader().getRawData().getTimestamp(),
