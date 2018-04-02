@@ -1,3 +1,4 @@
+const byteArray2hexStr = require("../utils/bytes").byteArray2hexStr;
 const {Block, Transaction} = require("../protocol/core/Tron_pb");
 const {TransferContract} = require("../protocol/core/Contract_pb");
 
