@@ -511,4 +511,5 @@ module.exports = {
   base64EncodeToString,
   base64DecodeFromString,
   hexStr2byteArray,
+  stringToBytes,
 };

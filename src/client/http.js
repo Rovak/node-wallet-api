@@ -7,6 +7,7 @@ const {Block, Transaction, Account} = require("../protocol/core/Tron_pb");
 const {AccountList, NumberMessage, WitnessList, AssetIssueList} = require("../protocol/api/api_pb");
 const {TransferContract} = require("../protocol/core/Contract_pb");
 const qs = require("qs");
+const stringToBytes = require("../lib/code").stringToBytes;
 const passwordToAddress = require("../utils/crypto").passwordToAddress;
 const { signTransaction } = require("../utils/crypto");
 
@@ -161,6 +162,10 @@ class HttpClient {
         totalSupply: asset.getTotalSupply(),
         startTime: asset.getStartTime(),
         endTime: asset.getEndTime(),
+        description: bytesToString(asset.getDescription()),
+        num: asset.getNum(),
+        trxNum: asset.getTrxNum(),
+        price: asset.getTrxNum() / asset.getNum(),
       };
     });
   }
@@ -295,6 +300,17 @@ class HttpClient {
       }));
 
     return await this.signTransaction(password, data);
+  }
+
+  async participateAsset(password, config) {
+    let {data} = await xhr.post(`${this.url}/ParticipateAssetIssueToView`, qs.stringify({
+      name: byteArray2hexStr(stringToBytes(config.name)),
+      ownerAddress: passwordToAddress(password),
+      toAddress: config.issuerAddress,
+      amount: config.amount,
+    }));
+
+    await this.signTransaction(password, data);
   }
 }
 
