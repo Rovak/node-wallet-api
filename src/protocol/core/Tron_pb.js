@@ -2412,7 +2412,7 @@ if (goog.DEBUG && !COMPILED) {
  * @private {!Array<number>}
  * @const
  */
-proto.protocol.Transaction.raw.repeatedFields_ = [5,7,11];
+proto.protocol.Transaction.raw.repeatedFields_ = [11];
 
 
 
@@ -2444,10 +2444,6 @@ proto.protocol.Transaction.raw.prototype.toObject = function(opt_includeInstance
 proto.protocol.Transaction.raw.toObject = function(includeInstance, msg) {
   var f, obj = {
     type: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    vinList: jspb.Message.toObjectList(msg.getVinList(),
-    proto.protocol.TXInput.toObject, includeInstance),
-    voutList: jspb.Message.toObjectList(msg.getVoutList(),
-    proto.protocol.TXOutput.toObject, includeInstance),
     expiration: jspb.Message.getFieldWithDefault(msg, 8, 0),
     data: msg.getData_asB64(),
     contractList: jspb.Message.toObjectList(msg.getContractList(),
@@ -2493,16 +2489,6 @@ proto.protocol.Transaction.raw.deserializeBinaryFromReader = function(msg, reade
     case 2:
       var value = /** @type {!proto.protocol.Transaction.TransactionType} */ (reader.readEnum());
       msg.setType(value);
-      break;
-    case 5:
-      var value = new proto.protocol.TXInput;
-      reader.readMessage(value,proto.protocol.TXInput.deserializeBinaryFromReader);
-      msg.addVin(value);
-      break;
-    case 7:
-      var value = new proto.protocol.TXOutput;
-      reader.readMessage(value,proto.protocol.TXOutput.deserializeBinaryFromReader);
-      msg.addVout(value);
       break;
     case 8:
       var value = /** @type {number} */ (reader.readInt64());
@@ -2561,22 +2547,6 @@ proto.protocol.Transaction.raw.serializeBinaryToWriter = function(message, write
       f
     );
   }
-  f = message.getVinList();
-  if (f.length > 0) {
-    writer.writeRepeatedMessage(
-      5,
-      f,
-      proto.protocol.TXInput.serializeBinaryToWriter
-    );
-  }
-  f = message.getVoutList();
-  if (f.length > 0) {
-    writer.writeRepeatedMessage(
-      7,
-      f,
-      proto.protocol.TXOutput.serializeBinaryToWriter
-    );
-  }
   f = message.getExpiration();
   if (f !== 0) {
     writer.writeInt64(
@@ -2628,68 +2598,6 @@ proto.protocol.Transaction.raw.prototype.getType = function() {
 /** @param {!proto.protocol.Transaction.TransactionType} value */
 proto.protocol.Transaction.raw.prototype.setType = function(value) {
   jspb.Message.setProto3EnumField(this, 2, value);
-};
-
-
-/**
- * repeated TXInput vin = 5;
- * @return {!Array.<!proto.protocol.TXInput>}
- */
-proto.protocol.Transaction.raw.prototype.getVinList = function() {
-  return /** @type{!Array.<!proto.protocol.TXInput>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.protocol.TXInput, 5));
-};
-
-
-/** @param {!Array.<!proto.protocol.TXInput>} value */
-proto.protocol.Transaction.raw.prototype.setVinList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 5, value);
-};
-
-
-/**
- * @param {!proto.protocol.TXInput=} opt_value
- * @param {number=} opt_index
- * @return {!proto.protocol.TXInput}
- */
-proto.protocol.Transaction.raw.prototype.addVin = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 5, opt_value, proto.protocol.TXInput, opt_index);
-};
-
-
-proto.protocol.Transaction.raw.prototype.clearVinList = function() {
-  this.setVinList([]);
-};
-
-
-/**
- * repeated TXOutput vout = 7;
- * @return {!Array.<!proto.protocol.TXOutput>}
- */
-proto.protocol.Transaction.raw.prototype.getVoutList = function() {
-  return /** @type{!Array.<!proto.protocol.TXOutput>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.protocol.TXOutput, 7));
-};
-
-
-/** @param {!Array.<!proto.protocol.TXOutput>} value */
-proto.protocol.Transaction.raw.prototype.setVoutList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 7, value);
-};
-
-
-/**
- * @param {!proto.protocol.TXOutput=} opt_value
- * @param {number=} opt_index
- * @return {!proto.protocol.TXOutput}
- */
-proto.protocol.Transaction.raw.prototype.addVout = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 7, opt_value, proto.protocol.TXOutput, opt_index);
-};
-
-
-proto.protocol.Transaction.raw.prototype.clearVoutList = function() {
-  this.setVoutList([]);
 };
 
 
@@ -5375,6 +5283,7 @@ proto.protocol.ReasonCode = {
   LOCAL_IDENTITY: 10,
   PING_TIMEOUT: 11,
   USER_REASON: 12,
+  RESET: 16,
   UNKNOWN: 255
 };
 

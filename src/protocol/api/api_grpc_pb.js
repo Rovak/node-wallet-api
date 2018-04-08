@@ -39,6 +39,17 @@ function deserialize_protocol_AccountList(buffer_arg) {
   return api_api_pb.AccountList.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_protocol_AccountUpdateContract(arg) {
+  if (!(arg instanceof core_Contract_pb.AccountUpdateContract)) {
+    throw new Error('Expected argument of type protocol.AccountUpdateContract');
+  }
+  return new Buffer(arg.serializeBinary());
+}
+
+function deserialize_protocol_AccountUpdateContract(buffer_arg) {
+  return core_Contract_pb.AccountUpdateContract.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_protocol_AssetIssueContract(arg) {
   if (!(arg instanceof core_Contract_pb.AssetIssueContract)) {
     throw new Error('Expected argument of type protocol.AssetIssueContract');
@@ -260,6 +271,17 @@ var WalletService = exports.WalletService = {
     requestDeserialize: deserialize_protocol_EmptyMessage,
     responseSerialize: serialize_protocol_AccountList,
     responseDeserialize: deserialize_protocol_AccountList,
+  },
+  updateAccount: {
+    path: '/protocol.Wallet/UpdateAccount',
+    requestStream: false,
+    responseStream: false,
+    requestType: core_Contract_pb.AccountUpdateContract,
+    responseType: core_Tron_pb.Transaction,
+    requestSerialize: serialize_protocol_AccountUpdateContract,
+    requestDeserialize: deserialize_protocol_AccountUpdateContract,
+    responseSerialize: serialize_protocol_Transaction,
+    responseDeserialize: deserialize_protocol_Transaction,
   },
   createAccount: {
     path: '/protocol.Wallet/CreateAccount',

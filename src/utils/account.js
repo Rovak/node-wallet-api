@@ -5,16 +5,16 @@ const {genPriKey, getAddressFromPriKey} = require("./crypto");
 function generateAccount() {
   let priKeyBytes = genPriKey();
   let addressBytes = getAddressFromPriKey(priKeyBytes);
-  let pk = base64EncodeToString(priKeyBytes);
   let address = byteArray2hexStr(addressBytes);
+  let password = base64EncodeToString(priKeyBytes);
+  let privateKey = byteArray2hexStr(priKeyBytes);
 
   return {
-    privateKey: pk,
+    privateKey,
     address,
-    password: byteArray2hexStr(priKeyBytes),
+    password,
   }
 }
-
 
 module.exports = {
   generateAccount,
