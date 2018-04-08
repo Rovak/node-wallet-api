@@ -37,7 +37,7 @@ function bytesToString(arr) {
     }
   }
   return str;
-};
+}
 
 /**
  * Converts a hex string to a decoded string

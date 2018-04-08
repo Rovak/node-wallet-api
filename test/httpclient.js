@@ -1,8 +1,9 @@
 const {HttpClient} = require("../src");
 const assert = require("assert");
 
+describe('http client', () => {
 
-describe('client', () => {
+  return;
 
   let client = new HttpClient({
     hostname: "tronscan.io",

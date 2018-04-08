@@ -1,10 +1,12 @@
 const base64EncodeToString = require("../lib/code").base64EncodeToString;
-const byteArray2hexStr = require("./bytes").byteArray2hexStr;
 const {base64DecodeFromString, hexStr2byteArray} = require("../lib/code");
 const EC = require('elliptic').ec;
-const { sha3_256 } = require('js-sha3');
+const { keccak256 } = require('js-sha3');
 const jsSHA = require("../lib/sha256");
-const byte2hexStr = require("./bytes").byte2hexStr;
+const { byte2hexStr, byteArray2hexStr } = require("./bytes");
+
+const add_pre_fix = 'a0'; //a0 + address  ,a0 is version
+
 
 /**
  * Sign A Transaction by priKey.
@@ -44,18 +46,20 @@ function genPriKey() {
   while (priKeyHex.length < 64) {
     priKeyHex = "0" + priKeyHex;
   }
-  let priKeyBytes = hexStr2byteArray(priKeyHex);
-  return priKeyBytes;
+
+  return hexStr2byteArray(priKeyHex);
 }
 
 //return address by bytes, pubBytes is byte[]
 function computeAddress(pubBytes) {
-  if (pubBytes.length == 65) {
+  if (pubBytes.length === 65) {
     pubBytes = pubBytes.slice(1);
   }
-  let hash = sha3_256(pubBytes).toString();
-  let addressHex = hash.substring(24);
-  let addressBytes = hexStr2byteArray(addressHex);
+
+  var hash = keccak256(pubBytes).toString();
+  var addressHex = hash.substring(24);
+  addressHex = add_pre_fix + addressHex;
+  var addressBytes = hexStr2byteArray(addressHex);
   return addressBytes;
 }
 
@@ -65,6 +69,7 @@ function getAddressFromPriKey(priKeyBytes) {
   let addressBytes = computeAddress(pubBytes);
   return addressBytes;
 }
+
 //return address by String, priKeyBytes is base64String
 function getHexStrAddressFromPriKeyBase64String(priKeyBase64String) {
     let priKeyBytes = base64DecodeFromString(priKeyBase64String);
@@ -84,21 +89,21 @@ function getAddressFromPriKeyBase64String(priKeyBase64String) {
 
 //return pubkey by 65 bytes, priKeyBytes is byte[]
 function getPubKeyFromPriKey(priKeyBytes) {
-  let ec = new EC('secp256k1');
-  let key = ec.keyFromPrivate(priKeyBytes, 'bytes');
-  let pubkey = key.getPublic();
-  let x = pubkey.x;
-  let y = pubkey.y;
-  let xHex = x.toString('hex');
+  var ec = new EC('secp256k1');
+  var key = ec.keyFromPrivate(priKeyBytes, 'bytes');
+  var pubkey = key.getPublic();
+  var x = pubkey.x;
+  var y = pubkey.y;
+  var xHex = x.toString('hex');
   while (xHex.length < 64) {
     xHex = "0" + xHex;
   }
-  let yHex = y.toString('hex');
+  var yHex = y.toString('hex');
   while (yHex.length < 64) {
     yHex = "0" + yHex;
   }
-  let pubkeyHex = "04" + xHex + yHex;
-  let pubkeyBytes = hexStr2byteArray(pubkeyHex);
+  var pubkeyHex = "04" + xHex + yHex;
+  var pubkeyBytes = hexStr2byteArray(pubkeyHex);
   return pubkeyBytes;
 }
 
@@ -120,8 +125,7 @@ function ECKeySign(hashBytes, priKeyBytes) {
   }
   let idHex = byte2hexStr(id);
   let signHex = rHex + sHex + idHex;
-  let signBytes = hexStr2byteArray(signHex);
-  return signBytes;
+  return hexStr2byteArray(signHex);
 }
 
 //toDO:
@@ -131,8 +135,7 @@ function SHA256(msgBytes) {
   let msgHex = byteArray2hexStr(msgBytes);
   shaObj.update(msgHex);
   let hashHex = shaObj.getHash("HEX");
-  let hashBytes = hexStr2byteArray(hashHex);
-  return hashBytes;
+  return hexStr2byteArray(hashHex);
 }
 
 function passwordToAddress(password) {
@@ -141,8 +144,10 @@ function passwordToAddress(password) {
   return byteArray2hexStr(com_addressBytes);
 }
 
-
 module.exports = {
   signTransaction,
   passwordToAddress,
+  genPriKey,
+  getAddressFromPriKey,
+  getPubKeyFromPriKey,
 };

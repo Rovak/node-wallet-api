@@ -1,15 +1,12 @@
 const xhr = require("axios");
-const byteArray2hexStr = require("../utils/bytes").byteArray2hexStr;
 const deserializeTransaction = require("../protocol/serializer").deserializeTransaction;
-const bytesToString = require("../utils/bytes").bytesToString;
-const {base64DecodeFromString} = require("../utils/bytes");
+const {base64DecodeFromString, byteArray2hexStr, bytesToString} = require("../utils/bytes");
 const {Block, Transaction, Account} = require("../protocol/core/Tron_pb");
 const {AccountList, NumberMessage, WitnessList, AssetIssueList} = require("../protocol/api/api_pb");
 const {TransferContract} = require("../protocol/core/Contract_pb");
 const qs = require("qs");
 const stringToBytes = require("../lib/code").stringToBytes;
-const passwordToAddress = require("../utils/crypto").passwordToAddress;
-const { signTransaction } = require("../utils/crypto");
+const { signTransaction, passwordToAddress } = require("../utils/crypto");
 
 class HttpClient {
 
@@ -138,6 +135,7 @@ class HttpClient {
 
       return {
         address: byteArray2hexStr(witness.getAddress()),
+        url: witness.getUrl(),
         latestBlockNumber: witness.getLatestblocknum(),
         producedTotal: witness.getTotalproduced(),
         missedTotal: witness.getTotalmissed(),
@@ -177,9 +175,9 @@ class HttpClient {
    * @returns {Promise<*>}
    */
   async getAccountBalances(address) {
-    let {data} = await xhr.post(`${this.url}/queryAccount`, {
+    let {data} = await xhr.post(`${this.url}/queryAccount`, qs.stringify({
       address,
-    });
+    }));
 
     let bytesAccountInfo = base64DecodeFromString(data);
     let accountInfo = Account.deserializeBinary(bytesAccountInfo);

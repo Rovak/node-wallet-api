@@ -13,8 +13,6 @@ function deserializeTransaction(tx) {
   for (let contract of contractList) {
     let any = contract.getParameter();
 
-    console.log(contract.getType());
-
     switch (contract.getType()) {
 
       case contractType.ACCOUNTCREATECONTRACT: {
