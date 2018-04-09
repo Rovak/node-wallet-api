@@ -2,6 +2,9 @@ const byteArray2hexStr = require("./bytes").byteArray2hexStr;
 const base64EncodeToString = require("../lib/code").base64EncodeToString;
 const {genPriKey, getAddressFromPriKey} = require("./crypto");
 
+/**
+ * Generate a new account
+ */
 function generateAccount() {
   let priKeyBytes = genPriKey();
   let addressBytes = getAddressFromPriKey(priKeyBytes);
@@ -15,7 +18,3 @@ function generateAccount() {
     password,
   }
 }
-
-module.exports = {
-  generateAccount,
-};
