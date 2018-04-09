@@ -18,3 +18,7 @@ function generateAccount() {
     password,
   }
 }
+
+module.exports = {
+  generateAccount,
+};
