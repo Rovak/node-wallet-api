@@ -308,7 +308,7 @@ class HttpClient {
       amount: config.amount,
     }));
 
-    await this.signTransaction(password, data);
+    return await this.signTransaction(password, data);
   }
 }
 
