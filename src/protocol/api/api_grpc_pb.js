@@ -94,6 +94,17 @@ function deserialize_protocol_BytesMessage(buffer_arg) {
   return api_api_pb.BytesMessage.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_protocol_DynamicProperties(arg) {
+  if (!(arg instanceof core_Tron_pb.DynamicProperties)) {
+    throw new Error('Expected argument of type protocol.DynamicProperties');
+  }
+  return new Buffer(arg.serializeBinary());
+}
+
+function deserialize_protocol_DynamicProperties(buffer_arg) {
+  return core_Tron_pb.DynamicProperties.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_protocol_EmptyMessage(arg) {
   if (!(arg instanceof api_api_pb.EmptyMessage)) {
     throw new Error('Expected argument of type protocol.EmptyMessage');
@@ -447,6 +458,17 @@ var WalletService = exports.WalletService = {
     requestDeserialize: deserialize_protocol_EmptyMessage,
     responseSerialize: serialize_protocol_NumberMessage,
     responseDeserialize: deserialize_protocol_NumberMessage,
+  },
+  getDynamicProperties: {
+    path: '/protocol.Wallet/GetDynamicProperties',
+    requestStream: false,
+    responseStream: false,
+    requestType: api_api_pb.EmptyMessage,
+    responseType: core_Tron_pb.DynamicProperties,
+    requestSerialize: serialize_protocol_EmptyMessage,
+    requestDeserialize: deserialize_protocol_EmptyMessage,
+    responseSerialize: serialize_protocol_DynamicProperties,
+    responseDeserialize: deserialize_protocol_DynamicProperties,
   },
 };
 
