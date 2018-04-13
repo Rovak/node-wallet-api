@@ -66,3 +66,8 @@ function decode58(string) {
 
   return bytes.reverse()
 }
+
+module.exports = {
+  encode58,
+  decode58,
+};
