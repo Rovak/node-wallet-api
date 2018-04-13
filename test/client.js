@@ -1,21 +1,19 @@
 const {bytesToString} = require("../src/utils/bytes");
-const {GrpcClient} = require("../src");
+const GRPCWebClient = require("../src/client/grpc-web");
 const assert = require("assert");
 
 
 describe('client', () => {
 
-  return;
-
-  let client = new GrpcClient({
+  let client = new GRPCWebClient({
     hostname: "localhost",
-    port: 50051,
+    port: 8080,
   });
 
   it('list nodes', async () => {
     let nodes = await client.getNodes();
     for (let node of nodes) {
-      console.log("node", node.getAddress().getHost_asB64())
+      console.log("node", node.address)
     }
   });
 
@@ -23,7 +21,7 @@ describe('client', () => {
     let witnesses = await client.getWitnesses();
 
     for (let witness of witnesses) {
-      console.log("witness", witness.getUrl());
+      console.log("witness", witness.url);
     }
   });
 
@@ -32,8 +30,8 @@ describe('client', () => {
 
     for (let account of accounts) {
       console.log("account", {
-        balance: account.getBalance(),
-        name: bytesToString(account.getAccountName()),
+        balance: account.balance,
+        name: bytesToString(account.accountName),
       });
     }
   });
@@ -41,7 +39,7 @@ describe('client', () => {
   it('retrieve block by number', async () => {
     for (let blockNumber = 0; blockNumber < 10; blockNumber++) {
       let block = await client.getBlockByNumber(blockNumber);
-      assert.equal(block.getBlockHeader().getRawData().getNumber(), blockNumber);
+      assert.equal(block.blockHeader.rawData.number, blockNumber);
     }
   });
 });
