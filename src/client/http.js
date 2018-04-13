@@ -11,16 +11,10 @@ const { signTransaction, passwordToAddress } = require("../utils/crypto");
 class HttpClient {
 
   constructor(options = {}) {
-    this.hostname = options.hostname || "tronscan.io";
-    this.port = options.port || 80;
-
     /**
      * @type {WalletClient}
      */
-    this.url = `https://${this.hostname}`;
-    if (this.port !== 80) {
-      this.url+= `:${this.port}`;
-    }
+    this.url = options.url || `https://tronscan.org`;
   }
 
   /**
