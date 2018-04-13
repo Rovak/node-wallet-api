@@ -1,5 +1,6 @@
 const base64EncodeToString = require("../lib/code").base64EncodeToString;
 const {base64DecodeFromString, hexStr2byteArray} = require("../lib/code");
+const {encode58, decode58} = require("../lib/base58");
 const EC = require('elliptic').ec;
 const { keccak256 } = require('js-sha3');
 const jsSHA = require("../lib/sha256");
@@ -70,13 +71,59 @@ function getAddressFromPriKey(priKeyBytes) {
   return addressBytes;
 }
 
+//return address by Base58Check String,
+function getBase58CheckAddress(addressBytes) {
+  var hash0 = SHA256(addressBytes);
+  var hash1 = SHA256(hash0);
+  var checkSum = hash1.slice(0, 4);
+  checkSum = addressBytes.concat(checkSum);
+  var base58Check = encode58(checkSum);
+
+  return base58Check;
+}
+
+function validAddress(base58Sting) {
+  if (typeof(base58Sting) != 'string') {
+    return false;
+  }
+  if (base58Sting.length != 35) {
+    return false;
+  }
+  var address = decode58(base58Sting);
+  if (address.length != 25) {
+    return false;
+  }
+  if (address[0] != add_pre_fix_byte) {
+    return false;
+  }
+  var checkSum = address.slice(21);
+  address = address.slice(0, 21);
+  var hash0 = SHA256(address);
+  var hash1 = SHA256(hash0);
+  var checkSum1 = hash1.slice(0, 4);
+  if (checkSum[0] == checkSum1[0] && checkSum[1] == checkSum1[1] && checkSum[2]
+      == checkSum1[2] && checkSum[3] == checkSum1[3]
+  ) {
+    return true
+  }
+  return false;
+}
+
+//return address by Base58Check String, priKeyBytes is base64String
+function getBase58CheckAddressFromPriKeyBase64String(priKeyBase64String) {
+  var priKeyBytes = base64DecodeFromString(priKeyBase64String);
+  var pubBytes = getPubKeyFromPriKey(priKeyBytes);
+  var addressBytes = computeAddress(pubBytes);
+  return getBase58CheckAddress(addressBytes);
+}
+
 //return address by String, priKeyBytes is base64String
 function getHexStrAddressFromPriKeyBase64String(priKeyBase64String) {
-    let priKeyBytes = base64DecodeFromString(priKeyBase64String);
-    let pubBytes = getPubKeyFromPriKey(priKeyBytes);
-    let addressBytes = computeAddress(pubBytes);
-    let addressHex = byteArray2hexStr(addressBytes);
-    return addressHex;
+  let priKeyBytes = base64DecodeFromString(priKeyBase64String);
+  let pubBytes = getPubKeyFromPriKey(priKeyBytes);
+  let addressBytes = computeAddress(pubBytes);
+  let addressHex = byteArray2hexStr(addressBytes);
+  return addressHex;
 }
 //return address by String, priKeyBytes is base64String
 function getAddressFromPriKeyBase64String(priKeyBase64String) {
@@ -150,4 +197,7 @@ module.exports = {
   genPriKey,
   getAddressFromPriKey,
   getPubKeyFromPriKey,
+  getBase58CheckAddress,
+  validAddress,
+  getBase58CheckAddressFromPriKeyBase64String
 };
