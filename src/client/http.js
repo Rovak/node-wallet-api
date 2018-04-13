@@ -11,9 +11,6 @@ const { signTransaction, passwordToAddress } = require("../utils/crypto");
 class HttpClient {
 
   constructor(options = {}) {
-    /**
-     * @type {WalletClient}
-     */
     this.url = options.url || `https://tronscan.org`;
   }
 
