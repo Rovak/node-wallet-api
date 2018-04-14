@@ -65,7 +65,7 @@ class HttpClient {
       witnessAddress: byteArray2hexStr(blockData.getBlockHeader().getRawData().getWitnessAddress()),
       time: blockData.getBlockHeader().getRawData().getTimestamp(),
       transactionsCount: blockData.getTransactionsList().length,
-      contraxtType: Transaction.Contract.ContractType,
+      contractType: Transaction.Contract.ContractType,
       transactions,
     };
   }
