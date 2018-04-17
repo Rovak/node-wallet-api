@@ -195,18 +195,18 @@ class HttpClient {
   /**
    * Vote for witnesses
    *
-   * @param address account password
+   * @param password account password
    * @param votes witness votes
    * @returns {Promise<void>}
    */
-  async voteForWitnesses(address, votes) {
-    await xhr
-      .post(`${this.url}/createVoteWitnessToView`, {
-        owner: address,
-        list: votes,
-      });
-  }
+  async voteForWitnesses(password, votes) {
+    let {data} = await xhr.post(`${this.url}/createVoteWitnessToView`, {
+      owner: passwordToAddress(password),
+      list: votes,
+    });
 
+    return await this.signTransaction(password, data);
+  }
 
   /**
    * Apply for delegate
