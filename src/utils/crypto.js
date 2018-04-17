@@ -7,6 +7,7 @@ const jsSHA = require("../lib/sha256");
 const { byte2hexStr, byteArray2hexStr } = require("./bytes");
 
 const add_pre_fix = 'a0'; //a0 + address  ,a0 is version
+const add_pre_fix_byte = 0xa0;   //a0 + address  ,a0 is version
 
 
 /**
@@ -82,7 +83,7 @@ function getBase58CheckAddress(addressBytes) {
   return base58Check;
 }
 
-function validAddress(base58Sting) {
+function isAddressValid(base58Sting) {
   if (typeof(base58Sting) != 'string') {
     return false;
   }
@@ -188,7 +189,7 @@ function SHA256(msgBytes) {
 function passwordToAddress(password) {
   let com_priKeyBytes = base64DecodeFromString(password);
   let com_addressBytes = getAddressFromPriKey(com_priKeyBytes);
-  return byteArray2hexStr(com_addressBytes);
+  return getBase58CheckAddress(com_addressBytes);
 }
 
 module.exports = {
@@ -198,6 +199,6 @@ module.exports = {
   getAddressFromPriKey,
   getPubKeyFromPriKey,
   getBase58CheckAddress,
-  validAddress,
+  isAddressValid,
   getBase58CheckAddressFromPriKeyBase64String
 };

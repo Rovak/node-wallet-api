@@ -6,7 +6,7 @@ const {AccountList, NumberMessage, WitnessList, AssetIssueList} = require("../pr
 const {TransferContract} = require("../protocol/core/Contract_pb");
 const qs = require("qs");
 const stringToBytes = require("../lib/code").stringToBytes;
-const { signTransaction, passwordToAddress } = require("../utils/crypto");
+const { getBase58CheckAddress, signTransaction, passwordToAddress } = require("../utils/crypto");
 
 class HttpClient {
 
@@ -29,6 +29,7 @@ class HttpClient {
    * @returns {Promise<*>}
    */
   async getLatestBlock() {
+
     let {data} = await xhr.get(`${this.url}/getBlockToView`);
     let currentBlock = base64DecodeFromString(data);
     let block = Block.deserializeBinary(currentBlock);
@@ -62,7 +63,7 @@ class HttpClient {
       size: recentBlock.length,
       parentHash: byteArray2hexStr(blockData.getBlockHeader().getRawData().getParenthash()),
       number: blockData.getBlockHeader().getRawData().getNumber(),
-      witnessAddress: byteArray2hexStr(blockData.getBlockHeader().getRawData().getWitnessAddress()),
+      witnessAddress: getBase58CheckAddress(Array.from(blockData.getBlockHeader().getRawData().getWitnessAddress())),
       time: blockData.getBlockHeader().getRawData().getTimestamp(),
       transactionsCount: blockData.getTransactionsList().length,
       contractType: Transaction.Contract.ContractType,
@@ -95,7 +96,7 @@ class HttpClient {
 
     return accountList.map(account => {
       let name = bytesToString(account.getAccountName());
-      let address = byteArray2hexStr(account.getAddress());
+      let address = getBase58CheckAddress(Array.from(account.getAddress()));
       let balance = account.getBalance();
       let balanceNum = 0;
       if (balance !== 0) {
@@ -125,7 +126,7 @@ class HttpClient {
     return witnessList.map(witness => {
 
       return {
-        address: byteArray2hexStr(witness.getAddress()),
+        address: getBase58CheckAddress(Array.from(witness.getAddress())),
         url: witness.getUrl(),
         latestBlockNumber: witness.getLatestblocknum(),
         producedTotal: witness.getTotalproduced(),
@@ -147,7 +148,7 @@ class HttpClient {
     return assetIssueListObj.getAssetissueList().map(asset => {
       return {
         name: bytesToString(asset.getName()),
-        ownerAddress: byteArray2hexStr(asset.getOwnerAddress()),
+        ownerAddress: getBase58CheckAddress(Array.from(asset.getOwnerAddress())),
         totalSupply: asset.getTotalSupply(),
         startTime: asset.getStartTime(),
         endTime: asset.getEndTime(),
