@@ -5,7 +5,6 @@ var grpc = require('grpc');
 var api_api_pb = require('../api/api_pb.js');
 var core_Tron_pb = require('../core/Tron_pb.js');
 var core_Contract_pb = require('../core/Contract_pb.js');
-var google_api_annotations_pb = require('../google/api/annotations_pb.js');
 
 function serialize_protocol_Account(arg) {
   if (!(arg instanceof core_Tron_pb.Account)) {
