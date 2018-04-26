@@ -266,7 +266,7 @@ class HttpClient {
         assetName: token,
         Address: passwordToAddress(password),
         toAddress: to,
-        Amount: amount,
+        Amount: amount / ONE_TRX,
       }));
 
       return await this.signTransaction(password, data);
@@ -299,7 +299,7 @@ class HttpClient {
       name: byteArray2hexStr(stringToBytes(config.name)),
       ownerAddress: passwordToAddress(password),
       toAddress: config.issuerAddress,
-      amount: config.name.toUpperCase() === 'TRX' ? config.amount : (config.amount / ONE_TRX),
+      amount: config.amount,
     }));
 
     return await this.signTransaction(password, data);
