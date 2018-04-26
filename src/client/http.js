@@ -8,6 +8,8 @@ const qs = require("qs");
 const stringToBytes = require("../lib/code").stringToBytes;
 const { getBase58CheckAddress, signTransaction, passwordToAddress } = require("../utils/crypto");
 
+const ONE_TRX = 1000000;
+
 class HttpClient {
 
   constructor(options = {}) {
@@ -100,7 +102,7 @@ class HttpClient {
       let balance = account.getBalance();
       let balanceNum = 0;
       if (balance !== 0) {
-        balanceNum = (balance / 1000000).toFixed(6);
+        balanceNum = (balance / ONE_TRX).toFixed(6);
       }
       return {
         name,
@@ -175,7 +177,7 @@ class HttpClient {
     let accountInfo = Account.deserializeBinary(bytesAccountInfo);
     let assetMap = accountInfo.getAssetMap().toArray();
     let trxBalance = accountInfo.getBalance();
-    let trxBalanceNum = (trxBalance / 1000000).toFixed(6);
+    let trxBalanceNum = (trxBalance / ONE_TRX).toFixed(6);
 
     let balances = [{
       name: 'TRX',
@@ -297,7 +299,7 @@ class HttpClient {
       name: byteArray2hexStr(stringToBytes(config.name)),
       ownerAddress: passwordToAddress(password),
       toAddress: config.issuerAddress,
-      amount: config.amount,
+      amount: config.name.toUpperCase() === 'TRX' ? config.amount : (config.amount / ONE_TRX),
     }));
 
     return await this.signTransaction(password, data);
