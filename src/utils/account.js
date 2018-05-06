@@ -9,13 +9,11 @@ function generateAccount() {
   let priKeyBytes = genPriKey();
   let addressBytes = getAddressFromPriKey(priKeyBytes);
   let address = getBase58CheckAddress(addressBytes);
-  let password = base64EncodeToString(priKeyBytes);
   let privateKey = byteArray2hexStr(priKeyBytes);
 
   return {
     privateKey,
     address,
-    password,
   }
 }
 

@@ -176,7 +176,7 @@ function ECKeySign(hashBytes, priKeyBytes) {
   return hexStr2byteArray(signHex);
 }
 
-//toDO:
+
 //return 32 bytes
 function SHA256(msgBytes) {
   let shaObj = new jsSHA("SHA-256", "HEX");
@@ -192,6 +192,12 @@ function passwordToAddress(password) {
   return getBase58CheckAddress(com_addressBytes);
 }
 
+function privateKeyToAddress(password) {
+  let com_priKeyBytes = hexStr2byteArray(password);
+  let com_addressBytes = getAddressFromPriKey(com_priKeyBytes);
+  return getBase58CheckAddress(com_addressBytes);
+}
+
 module.exports = {
   signTransaction,
   passwordToAddress,
@@ -200,5 +206,6 @@ module.exports = {
   getPubKeyFromPriKey,
   getBase58CheckAddress,
   isAddressValid,
+  privateKeyToAddress,
   getBase58CheckAddressFromPriKeyBase64String
 };
