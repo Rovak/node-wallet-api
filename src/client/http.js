@@ -191,7 +191,24 @@ class HttpClient {
       })
     }
 
-    return balances;
+    let frozenBalances = accountInfo.getFrozenList().map(frozenBalance => ({
+      amount: frozenBalance.getFrozenBalance(),
+      expires: frozenBalance.getExpireTime(),
+    }));
+
+    let totalFrozenBalance = 0;
+
+    for (let frozenBalance of frozenBalances) {
+      totalFrozenBalance += frozenBalance.amount;
+    }
+
+    return {
+      balances,
+      frozen: {
+        total: totalFrozenBalance,
+        balances: [],
+      }
+    };
   }
 
   /**
