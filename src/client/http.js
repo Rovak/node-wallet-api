@@ -228,10 +228,10 @@ class HttpClient {
     return await this.signTransaction(password, data);
   }
 
-  async signTransaction(password, data) {
+  async signTransaction(privateKey, data) {
     let bytesDecode = base64DecodeFromString(data);
     let transaction = Transaction.deserializeBinary(bytesDecode);
-    let transactionSigned = signTransaction(base64DecodeFromString(password), transaction);
+    let transactionSigned = signTransaction(hexStr2byteArray(privateKey), transaction);
     let transactionBytes = transactionSigned.serializeBinary();
     let transactionString = byteArray2hexStr(transactionBytes);
 
