@@ -5,6 +5,7 @@ const {Block, Transaction, Account} = require("../protocol/core/Tron_pb");
 const {AccountList, NumberMessage, WitnessList, AssetIssueList} = require("../protocol/api/api_pb");
 const {TransferContract} = require("../protocol/core/Contract_pb");
 const qs = require("qs");
+const hexStr2byteArray = require("../lib/code").hexStr2byteArray;
 const stringToBytes = require("../lib/code").stringToBytes;
 const { getBase58CheckAddress, signTransaction, privateKeyToAddress } = require("../utils/crypto");
 
