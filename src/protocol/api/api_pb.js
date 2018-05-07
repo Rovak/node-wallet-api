@@ -13,6 +13,7 @@ var global = Function('return this')();
 
 var core_Tron_pb = require('../core/Tron_pb.js');
 var core_Contract_pb = require('../core/Contract_pb.js');
+// var google_api_annotations_pb = require('../google/api/annotations_pb.js');
 goog.exportSymbol('proto.protocol.AccountList', null, global);
 goog.exportSymbol('proto.protocol.Address', null, global);
 goog.exportSymbol('proto.protocol.AssetIssueList', null, global);
