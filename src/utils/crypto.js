@@ -18,6 +18,12 @@ const add_pre_fix_byte = 0xa0;   //a0 + address  ,a0 is version
  * @param transaction: a Transaction object unSigned
  */
 function signTransaction(priKeyBytes, transaction) {
+
+  if (typeof priKeyBytes === 'string') {
+    priKeyBytes = hexStr2byteArray(priKeyBytes);
+  }
+
+
   let raw = transaction.getRawData();
   let rawBytes = raw.serializeBinary();
   let hashBytes = SHA256(rawBytes);
@@ -82,6 +88,29 @@ function getBase58CheckAddress(addressBytes) {
 
   return base58Check;
 }
+
+
+function decode58Check(addressStr) {
+
+  var decodeCheck = decode58(addressStr);
+  if (decodeCheck.length <= 4) {
+    return null;
+  }
+
+  var decodeData = decodeCheck.slice(0, decodeCheck.length - 4);
+  var hash0 = SHA256(decodeData);
+  var hash1 = SHA256(hash0);
+
+  if (hash1[0] === decodeCheck[decodeData.length] &&
+    hash1[1] === decodeCheck[decodeData.length + 1] &&
+    hash1[2] === decodeCheck[decodeData.length + 2] &&
+    hash1[3] === decodeCheck[decodeData.length + 3]) {
+    return decodeData;
+  }
+
+  return null;
+}
+
 
 function isAddressValid(base58Sting) {
   if (typeof(base58Sting) != 'string') {
@@ -207,5 +236,6 @@ module.exports = {
   getBase58CheckAddress,
   isAddressValid,
   privateKeyToAddress,
-  getBase58CheckAddressFromPriKeyBase64String
+  getBase58CheckAddressFromPriKeyBase64String,
+  decode58Check,
 };

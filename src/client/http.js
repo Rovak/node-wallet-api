@@ -247,8 +247,15 @@ class HttpClient {
   }
 
   async signTransaction(privateKey, data) {
-    let bytesDecode = base64DecodeFromString(data);
-    let transaction = Transaction.deserializeBinary(bytesDecode);
+
+    let transaction;
+    if (typeof data === 'string') {
+      let bytesDecode = base64DecodeFromString(data);
+      transaction = Transaction.deserializeBinary(bytesDecode);
+    } else if (data instanceof Transaction) {
+      transaction = data;
+    }
+
     let transactionSigned = signTransaction(hexStr2byteArray(privateKey), transaction);
     let transactionBytes = transactionSigned.serializeBinary();
     let transactionString = byteArray2hexStr(transactionBytes);
