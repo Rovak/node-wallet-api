@@ -1,7 +1,12 @@
 const decode58Check = require("./crypto").decode58Check;
 const {Transaction} = require("../protocol/core/Tron_pb");
 const google_protobuf_any_pb = require('google-protobuf/google/protobuf/any_pb.js');
-const {FreezeBalanceContract, UnfreezeBalanceContract} = require("../protocol/core/Contract_pb");
+const {FreezeBalanceContract, UnfreezeBalanceContract, WitnessCreateContract} = require("../protocol/core/Contract_pb");
+const base64DecodeFromString = require("../lib/code").base64DecodeFromString;
+
+function encodeString(str) {
+  return Uint8Array.from(base64DecodeFromString(btoa(str)));
+}
 
 function buildTransferContract(message, contractType, typeName) {
   var anyValue = new google_protobuf_any_pb.Any();
@@ -57,7 +62,26 @@ function buildUnfreezeBalance(address) {
     "UnfreezeBalanceContract");
 }
 
+/**
+ * Unfreeze balance
+ *
+ * @param address From which address to freze
+ * @param url url
+ */
+function buildApplyForDelegate(address, url) {
+  var contract = new WitnessCreateContract();
+
+  contract.setOwnerAddress(Uint8Array.from(decode58Check(address)));
+  contract.setUrl(encodeString(url));
+
+  return buildTransferContract(
+    contract,
+    Transaction.Contract.ContractType.WITNESSCREATECONTRACT,
+    "WitnessCreateContract");
+}
+
 module.exports = {
   buildFreezeBalance,
   buildUnfreezeBalance,
+  buildApplyForDelegate,
 };

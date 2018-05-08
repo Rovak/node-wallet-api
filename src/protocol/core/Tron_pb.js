@@ -6977,9 +6977,7 @@ proto.protocol.AccountType = {
  */
 proto.protocol.ReasonCode = {
   REQUESTED: 0,
-  TCP_ERROR: 1,
   BAD_PROTOCOL: 2,
-  USELESS_PEER: 3,
   TOO_MANY_PEERS: 4,
   DUPLICATE_PEER: 5,
   INCOMPATIBLE_PROTOCOL: 6,
@@ -6991,13 +6989,14 @@ proto.protocol.ReasonCode = {
   USER_REASON: 16,
   RESET: 17,
   SYNC_FAIL: 18,
-  TIME_OUT: 19,
+  FETCH_FAIL: 19,
   BAD_TX: 20,
   BAD_BLOCK: 21,
   FORKED: 22,
   UNLINKABLE: 23,
   INCOMPATIBLE_VERSION: 24,
   INCOMPATIBLE_CHAIN: 25,
+  TIME_OUT: 32,
   UNKNOWN: 255
 };
 

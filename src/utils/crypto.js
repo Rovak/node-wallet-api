@@ -9,10 +9,10 @@ const { byte2hexStr, byteArray2hexStr } = require("./bytes");
 const add_pre_fix = 'a0'; //a0 + address  ,a0 is version
 const add_pre_fix_byte = 0xa0;   //a0 + address  ,a0 is version
 
-
 /**
  * Sign A Transaction by priKey.
  * signature is 65 bytes, r[32] || s[32] || id[1](<27)
+ *
  * @returns  a Transaction object signed
  * @param priKeyBytes: privateKey for ECC
  * @param transaction: a Transaction object unSigned
@@ -23,7 +23,6 @@ function signTransaction(priKeyBytes, transaction) {
     priKeyBytes = hexStr2byteArray(priKeyBytes);
   }
 
-
   let raw = transaction.getRawData();
   let rawBytes = raw.serializeBinary();
   let hashBytes = SHA256(rawBytes);
@@ -31,11 +30,11 @@ function signTransaction(priKeyBytes, transaction) {
   let uint8Array = new Uint8Array(signBytes);
   let count = raw.getContractList().length;
   for (let i = 0; i < count; i++) {
-    transaction.addSignature(uint8Array); //TODO: multy priKey
+    transaction.addSignature(uint8Array);
   }
+
   return transaction;
 }
-
 
 //return bytes of rowdata, use to sign.
 function getRowBytesFromTransactionBase64(base64Data) {
@@ -229,6 +228,7 @@ function privateKeyToAddress(password) {
 
 module.exports = {
   signTransaction,
+  SHA256,
   passwordToAddress,
   genPriKey,
   getAddressFromPriKey,
