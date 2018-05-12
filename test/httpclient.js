@@ -1,4 +1,4 @@
-const {HttpClient} = require("../src");
+const {HttpClient} = require("../dist");
 const assert = require("assert");
 
 describe('http client', () => {

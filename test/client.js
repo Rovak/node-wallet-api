@@ -1,5 +1,5 @@
-const {bytesToString} = require("../src/utils/bytes");
-const {GrpcClient} = require("../src");
+const {bytesToString} = require("../dist/utils/bytes");
+const {GrpcClient} = require("../dist");
 const assert = require("assert");
 
 

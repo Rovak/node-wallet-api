@@ -1,3 +1,4 @@
+require('babel-polyfill');
 const GrpcClient = require("./client/grpc");
 const HttpClient = require("./client/http");
 
