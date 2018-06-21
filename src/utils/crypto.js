@@ -6,8 +6,8 @@ const { keccak256 } = require('js-sha3');
 const jsSHA = require("../lib/sha256");
 const { byte2hexStr, byteArray2hexStr } = require("./bytes");
 
-const add_pre_fix = 'a0'; //a0 + address  ,a0 is version
-const add_pre_fix_byte = 0xa0;   //a0 + address  ,a0 is version
+const add_pre_fix = '41'; //a0 + address  ,a0 is version
+const add_pre_fix_byte = 0x41;   //a0 + address  ,a0 is version
 
 /**
  * Sign A Transaction by priKey.
@@ -115,7 +115,7 @@ function isAddressValid(base58Sting) {
   if (typeof(base58Sting) != 'string') {
     return false;
   }
-  if (base58Sting.length != 35) {
+  if (base58Sting.length != 34) {
     return false;
   }
   var address = decode58(base58Sting);
