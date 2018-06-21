@@ -9,15 +9,20 @@ const { byte2hexStr, byteArray2hexStr } = require("./bytes");
 const add_pre_fix = 'a0'; //a0 + address  ,a0 is version
 const add_pre_fix_byte = 0xa0;   //a0 + address  ,a0 is version
 
-
 /**
  * Sign A Transaction by priKey.
  * signature is 65 bytes, r[32] || s[32] || id[1](<27)
+ *
  * @returns  a Transaction object signed
  * @param priKeyBytes: privateKey for ECC
  * @param transaction: a Transaction object unSigned
  */
 function signTransaction(priKeyBytes, transaction) {
+
+  if (typeof priKeyBytes === 'string') {
+    priKeyBytes = hexStr2byteArray(priKeyBytes);
+  }
+
   let raw = transaction.getRawData();
   let rawBytes = raw.serializeBinary();
   let hashBytes = SHA256(rawBytes);
@@ -25,11 +30,11 @@ function signTransaction(priKeyBytes, transaction) {
   let uint8Array = new Uint8Array(signBytes);
   let count = raw.getContractList().length;
   for (let i = 0; i < count; i++) {
-    transaction.addSignature(uint8Array); //TODO: multy priKey
+    transaction.addSignature(uint8Array);
   }
+
   return transaction;
 }
-
 
 //return bytes of rowdata, use to sign.
 function getRowBytesFromTransactionBase64(base64Data) {
@@ -82,6 +87,29 @@ function getBase58CheckAddress(addressBytes) {
 
   return base58Check;
 }
+
+
+function decode58Check(addressStr) {
+
+  var decodeCheck = decode58(addressStr);
+  if (decodeCheck.length <= 4) {
+    return null;
+  }
+
+  var decodeData = decodeCheck.slice(0, decodeCheck.length - 4);
+  var hash0 = SHA256(decodeData);
+  var hash1 = SHA256(hash0);
+
+  if (hash1[0] === decodeCheck[decodeData.length] &&
+    hash1[1] === decodeCheck[decodeData.length + 1] &&
+    hash1[2] === decodeCheck[decodeData.length + 2] &&
+    hash1[3] === decodeCheck[decodeData.length + 3]) {
+    return decodeData;
+  }
+
+  return null;
+}
+
 
 function isAddressValid(base58Sting) {
   if (typeof(base58Sting) != 'string') {
@@ -200,6 +228,7 @@ function privateKeyToAddress(password) {
 
 module.exports = {
   signTransaction,
+  SHA256,
   passwordToAddress,
   genPriKey,
   getAddressFromPriKey,
@@ -207,5 +236,6 @@ module.exports = {
   getBase58CheckAddress,
   isAddressValid,
   privateKeyToAddress,
-  getBase58CheckAddressFromPriKeyBase64String
+  getBase58CheckAddressFromPriKeyBase64String,
+  decode58Check,
 };
