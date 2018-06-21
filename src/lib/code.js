@@ -1,4 +1,9 @@
 /* eslint-disable */
+
+var {Any} = require('google-protobuf/google/protobuf/any_pb.js');
+var Contracts = require("../protocol/core/Contract_pb");
+var {Transaction} = require("../protocol/core/Tron_pb");
+
 function bin2String(array) {
   return String.fromCharCode.apply(String, array);
 }
@@ -20,93 +25,63 @@ function arrayEquals(array1, array2) {
 //从base64字符串中解析TransAction对象
 function getTransActionFromBase64String(base64String) {
   var bytesDecode = base64DecodeFromString(base64String);
-  var transaction = proto.protocol.Transaction.deserializeBinary(bytesDecode);
+  var transaction = Transaction.deserializeBinary(bytesDecode);
   //ToDo : ret is success
   return transaction;
 }
 
-//Return a list contains contract object
-//从TransAction对象中获得合约列表
 function getContractListFromTransaction(transaction) {
-  var raw = transaction.getRawData();
-  var type = raw.getType();
-  if (type != 1) {
-    layer.alert("Invalid transaction type !!!!" + type);
-    return null;
-  }
-  var contractList = raw.getContractList();
-  var count = contractList.length;
-  if (count == 0) {
-    layer.alert("No contract !!!!");
-    return null;
-  }
+  return transaction.getRawData().getContractList().map(contract => {
+    var any = contract.getParameter();
 
-  array = new Array(count);
-  var unpack = proto.google.protobuf.Any.prototype.unpack;
-  while (count > 0) {
-    count--;
-    var oneContract = contractList[count];
-    var any = oneContract.getParameter();
-    var contarcType = oneContract.getType();
-    var obje;
-    switch (contarcType) {
-      case proto.protocol.Transaction.Contract.ContractType.ACCOUNTCREATECONTRACT:
-        obje = any.unpack(
-            proto.protocol.AccountCreateContract.deserializeBinary,
-            "protocol.AccountCreateContract");
-        break;
+    switch (contract.getType()) {
+      case Transaction.Contract.ContractType.ACCOUNTCREATECONTRACT:
+        return any.unpack(
+          Contracts.AccountCreateContract.deserializeBinary,
+          "protocol.AccountCreateContract");
 
-      case proto.protocol.Transaction.Contract.ContractType.TRANSFERCONTRACT:
-        obje = any.unpack(
-            proto.protocol.TransferContract.deserializeBinary,
-            "protocol.TransferContract");
-        break;
+      case Transaction.Contract.ContractType.TRANSFERCONTRACT:
+        return any.unpack(
+          Contracts.TransferContract.deserializeBinary,
+          "protocol.TransferContract");
 
-      case proto.protocol.Transaction.Contract.ContractType.TRANSFERASSETCONTRACT:
-        obje = any.unpack(
-            proto.protocol.TransferAsstContract.deserializeBinary,
-            "protocol.TransferAssetContract");
-        break;
+      case Transaction.Contract.ContractType.TRANSFERASSETCONTRACT:
+        return any.unpack(
+          Contracts.TransferAsstContract.deserializeBinary,
+          "protocol.TransferAssetContract");
 
-      case proto.protocol.Transaction.Contract.ContractType.VOTEASSETCONTRACT:
-        obje = any.unpack(
-            proto.protocol.VoteAssetContract.deserializeBinary,
-            "protocol.VoteAssetContract");
-        break;
+      case Transaction.Contract.ContractType.VOTEASSETCONTRACT:
+        return any.unpack(
+          Contracts.VoteAssetContract.deserializeBinary,
+          "protocol.VoteAssetContract");
 
-      case proto.protocol.Transaction.Contract.ContractType.VOTEWITNESSCONTRACT:
-        obje = any.unpack(
-            proto.protocol.VoteWitnessContract.deserializeBinary,
-            "protocol.VoteWitnessContract");
-        break;
+      case Transaction.Contract.ContractType.VOTEWITNESSCONTRACT:
+        return any.unpack(
+          Contracts.VoteWitnessContract.deserializeBinary,
+          "protocol.VoteWitnessContract");
 
-      case proto.protocol.Transaction.Contract.ContractType.WITNESSCREATECONTRACT:
-        obje = any.unpack(
-            proto.protocol.WitnessCreateContract.deserializeBinary,
-            "protocol.WitnessCreateContract");
-        break;
+      case Transaction.Contract.ContractType.WITNESSCREATECONTRACT:
+        return any.unpack(
+          Contracts.WitnessCreateContract.deserializeBinary,
+          "protocol.WitnessCreateContract");
 
-      case proto.protocol.Transaction.Contract.ContractType.ASSETISSUECONTRACT:
-        obje = any.unpack(
-            proto.protocol.AssetIssueContract.deserializeBinary,
-            "protocol.AssetIssueContract");
-        break;
+      case Transaction.Contract.ContractType.ASSETISSUECONTRACT:
+        return any.unpack(
+          Contracts.AssetIssueContract.deserializeBinary,
+          "protocol.AssetIssueContract");
 
-      case proto.protocol.Transaction.Contract.ContractType.DEPLOYCONTRACT:
-        obje = any.unpack(
-            proto.protocol.DeployContract.deserializeBinary,
-            "protocol.DeployContract");
-        break;
+      case Transaction.Contract.ContractType.DEPLOYCONTRACT:
+        return any.unpack(
+          Contracts.DeployContract.deserializeBinary,
+          "protocol.DeployContract");
 
-      case proto.protocol.Transaction.Contract.ContractType.WITNESSUPDATECONTRACT:
-        obje = any.unpack(
-            proto.protocol.WitnessUpdateContract.deserializeBinary,
-            "protocol.WitnessUpdateContract");
-        break;
+      case Transaction.Contract.ContractType.WITNESSUPDATECONTRACT:
+        return any.unpack(
+          Contracts.WitnessUpdateContract.deserializeBinary,
+          "protocol.WitnessUpdateContract");
     }
-    array[count] = obje;
-  }
-  return array;
+
+  });
 }
 
 //字符串转byteArray数据格式
@@ -512,4 +487,5 @@ module.exports = {
   base64DecodeFromString,
   hexStr2byteArray,
   stringToBytes,
+  getContractListFromTransaction,
 };

@@ -37,17 +37,6 @@ class GrpcClient {
   }
 
   /**
-   * Retrieve all accounts
-   *
-   * @returns {Promise<*>}
-   */
-  async getAccounts() {
-    return await this.api.listAccounts(new EmptyMessage())
-      .then(x => x.getAccountsList());
-  }
-
-
-  /**
    * Retrieves a block by the given number
    *
    * @param {number} number block number

@@ -1,14 +1,13 @@
 const {bytesToString} = require("../src/utils/bytes");
 const {GrpcClient} = require("../src");
 const assert = require("assert");
+const getContractListFromTransaction = require("../src/lib/code").getContractListFromTransaction;
 
 
 describe('client', () => {
 
-  return;
-
   let client = new GrpcClient({
-    hostname: "localhost",
+    hostname: "47.254.146.147",
     port: 50051,
   });
 
@@ -27,21 +26,11 @@ describe('client', () => {
     }
   });
 
-  it('list accounts', async () => {
-    let accounts = await client.getAccounts();
-
-    for (let account of accounts) {
-      console.log("account", {
-        balance: account.getBalance(),
-        name: bytesToString(account.getAccountName()),
-      });
-    }
-  });
 
   it('retrieve block by number', async () => {
-    for (let blockNumber = 0; blockNumber < 10; blockNumber++) {
-      let block = await client.getBlockByNumber(blockNumber);
-      assert.equal(block.getBlockHeader().getRawData().getNumber(), blockNumber);
-    }
+    let block = await client.getBlockByNumber(105);
+    console.log("number", block.getBlockHeader().getRawData().getNumber());
+    let contracts = getContractListFromTransaction(block.getTransactionsList()[0]);
+    console.log("number of contracts", contracts.length);
   });
 });
