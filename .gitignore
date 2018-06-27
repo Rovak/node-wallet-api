@@ -64,3 +64,5 @@ typings/
 .idea
 
 ./protocol
+
+dist

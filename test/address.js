@@ -1,5 +1,5 @@
 const { assert } = require('chai');
-const {isAddressValid} = require("../src/utils/address");
+const {isAddressValid} = require("../dist/utils/address");
 
 describe('address', () => {
 

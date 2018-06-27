@@ -8,7 +8,8 @@
     "test": "mocha",
     "protoc:install": "cd protocol && ./install-protobuf.sh",
     "protoc:generate": "./protocol/protobuf-3.5.1/src/.libs/protoc --proto_path=protocol/protobuf-3.5.1/src --proto_path=protocol --grpc_out=./src/protocol --plugin=protoc-gen-grpc=`which grpc_tools_node_protoc_plugin` --js_out=import_style=commonjs,binary:src/protocol protocol/core/*.proto protocol/api/*.proto",
-    "test:watch": "mocha --watch"
+    "test:watch": "mocha --watch",
+    "build": "babel  ./src --experimental --source-maps-inline -d ./dist"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,7 @@
   "license": "GPL-3.0",
   "dependencies": {
     "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
     "chai": "^4.1.2",
     "crypto-js": "^3.1.9-1",
     "elliptic": "^6.4.0",
@@ -31,5 +33,9 @@
     "js-sha3": "^0.7.0",
     "mocha": "^5.1.0",
     "qs": "^6.5.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0"
   }
 }
